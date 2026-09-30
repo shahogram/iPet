@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Лапки — прототип миниапки для питомцев</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&family=Unbounded:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f3f0ff;--card:#fff;--ink:#1a1433;--muted:#7a7396;--soft:#ebe6ff;--line:#e4defa;--a:#6c4dff;--ai:#fff;--ha:#6c4dff;--hb:#a78bfa;--hi:#fff;
+--hf:'Unbounded','Trebuchet MS',sans-serif;--bf:'Manrope','Segoe UI',system-ui,sans-serif;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+:root[data-pal="lime"]{--bg:#eff6f1;--ink:#0d2b21;--muted:#6a8578;--soft:#dcefe2;--line:#d3e6da;--a:#c8f542;--ai:#10261c;--ha:#0f5c43;--hb:#1f8a63}
+:root[data-pal="ocean"]{--bg:#edf4ff;--ink:#0c2144;--muted:#6480a8;--soft:#dbe8ff;--line:#d3e1fa;--a:#2f6bff;--ai:#fff;--ha:#2f6bff;--hb:#58a6ff}
+:root[data-pal="night"]{--bg:#0f1220;--card:#191d31;--ink:#eef0ff;--muted:#8f96b8;--soft:#242946;--line:#2a3050;--a:#b6ff5c;--ai:#0f1220;--ha:#5b3df5;--hb:#b04dff}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+html,body{height:100%;margin:0}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--bf);font-size:15px;line-height:1.45;-webkit-font-smoothing:antialiased;transition:background .3s}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;padding:0}
+button:focus-visible,input:focus-visible{outline:3px solid var(--a);outline-offset:2px}
+svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.app{position:relative;height:100%;max-width:480px;margin:0 auto;display:flex;flex-direction:column}
+.top{display:flex;justify-content:space-between;align-items:center;padding:12px 18px 0}
+.logo{display:flex;align-items:center;gap:8px;font-family:var(--hf);font-weight:600;font-size:16px}
+.logo i{width:32px;height:32px;border-radius:12px;background:var(--a);color:var(--ai);display:grid;place-items:center}
+.logo svg{width:18px;height:18px}
+.dots{display:flex;gap:8px;align-items:center;font-size:12px;color:var(--muted);font-weight:700}
+.dots button{width:22px;height:22px;border-radius:50%;border:2px solid var(--card);box-shadow:0 0 0 1px var(--line)}
+.dots button.on{box-shadow:0 0 0 2px var(--ink)}
+main{flex:1;overflow-y:auto;padding:14px 16px 120px}
+h1,h2,h3{font-family:var(--hf);font-weight:600;margin:0;line-height:1.2}
+h1{font-size:22px}
+h2{font-size:16px;margin:24px 0 12px}
+.muted{color:var(--muted)}
+.tab{display:none}.tab.on{display:block}
+.card{background:var(--card);border-radius:28px;padding:16px;box-shadow:0 6px 20px -12px color-mix(in srgb,var(--ink) 35%,transparent)}
+.chip{padding:8px 15px;border-radius:99px;background:var(--soft);font-weight:700;font-size:13px;white-space:nowrap}
+.chip.on{background:var(--ink);color:var(--bg)}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:12px 0 4px}
+.btn{background:var(--a);color:var(--ai);font-weight:800;padding:10px 18px;border-radius:99px;display:inline-flex;align-items:center;justify-content:center;gap:6px}
+.btn.alt{background:var(--soft);color:var(--ink)}
+/* bento */
+.hero{margin-top:14px;border-radius:32px;padding:20px;color:var(--hi);background:linear-gradient(135deg,var(--ha),var(--hb));display:flex;gap:16px;align-items:center;position:relative;overflow:hidden}
+.hero:after{content:"";position:absolute;right:-30px;top:-40px;width:150px;height:150px;border-radius:50%;background:#fff2}
+.hero .av{font-size:44px;width:76px;height:76px;border-radius:26px;background:#fff3;display:grid;place-items:center;flex:none;backdrop-filter:blur(6px)}
+.hero p{margin:4px 0 10px;opacity:.9;font-size:14px}
+.pill{background:#fff;color:#1a1433;font-weight:800;font-size:12.5px;padding:7px 14px;border-radius:99px;display:inline-block}
+.bento{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+.tile{background:var(--card);border-radius:28px;padding:16px;text-align:left;display:flex;flex-direction:column;justify-content:space-between;gap:10px;min-height:120px;box-shadow:0 6px 20px -12px color-mix(in srgb,var(--ink) 35%,transparent)}
+.tile b{font-family:var(--hf);font-weight:500;font-size:14px;display:block;line-height:1.25}
+.tile small{color:var(--muted);font-size:12.5px;font-weight:600}
+.tile .ic{width:42px;height:42px;border-radius:15px;background:var(--soft);display:grid;place-items:center;font-size:22px}
+.tall{grid-row:span 2;background:var(--a);color:var(--ai)}
+.tall small{color:inherit;opacity:.75}
+.tall .ic{background:#fff4}
+.wide{grid-column:span 2;flex-direction:row;align-items:center}
+.big{font-size:52px;line-height:1}
+/* shop */
+.prods{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px}
+.prod{background:var(--card);border-radius:26px;padding:10px 10px 12px;display:flex;flex-direction:column;gap:8px}
+.prod .pic{font-size:46px;height:96px;border-radius:20px;background:var(--soft);display:grid;place-items:center}
+.prod b{font-size:13.5px;line-height:1.3;padding:0 4px}
+.prod .r{display:flex;justify-content:space-between;align-items:center;padding:0 4px}
+.price{font-family:var(--hf);font-weight:500;font-size:14px}
+.add{width:36px;height:36px;border-radius:50%;background:var(--a);color:var(--ai);display:grid;place-items:center}
+.add.done{background:var(--soft);color:var(--ink)}
+.add svg{width:18px;height:18px}
+.cartbar{position:sticky;bottom:0;margin-top:14px;background:var(--ink);color:var(--bg);border-radius:22px;padding:14px 18px;display:none;justify-content:space-between;font-weight:800}
+.cartbar.on{display:flex}
+/* map */
+.map{position:relative;height:280px;border-radius:30px;overflow:hidden;margin-top:8px;
+background:linear-gradient(90deg,transparent 46%,var(--card) 46% 52%,transparent 52%) 0 0/130px 100%,linear-gradient(0deg,transparent 44%,var(--card) 44% 51%,transparent 51%) 0 0/100% 96px,var(--soft)}
+.map .park{position:absolute;left:8%;top:12%;width:34%;height:30%;background:color-mix(in srgb,var(--a) 28%,transparent);border-radius:45% 55% 50% 50%}
+.map .river{position:absolute;right:-10%;bottom:8%;width:70%;height:36px;background:color-mix(in srgb,var(--hb) 35%,transparent);border-radius:40px;transform:rotate(-14deg)}
+.pin{position:absolute;transform:translate(-50%,-50%);width:38px;height:38px;border-radius:50%;background:var(--card);display:grid;place-items:center;font-size:18px;box-shadow:0 4px 10px #0003;transition:transform .15s}
+.pin.sel{background:var(--a);transform:translate(-50%,-50%) scale(1.3);z-index:2}
+.map .note{position:absolute;left:12px;bottom:10px;font-size:11px;font-weight:700;background:var(--card);color:var(--muted);padding:4px 10px;border-radius:99px}
+.place{display:flex;gap:12px;align-items:center;width:100%;text-align:left;padding:12px;border-radius:24px;background:var(--card);margin-bottom:10px;border:2px solid transparent}
+.place.sel{border-color:var(--a)}
+.place .ic{width:46px;height:46px;border-radius:16px;background:var(--soft);display:grid;place-items:center;font-size:22px;flex:none}
+/* pet */
+.seg{display:flex;gap:8px;margin:12px 0}
+.pet{border-radius:32px;padding:22px 18px;color:var(--hi);background:linear-gradient(135deg,var(--ha),var(--hb));text-align:center}
+.pet .big{width:104px;height:104px;margin:0 auto 10px;background:#fff3;border-radius:36px;display:grid;place-items:center;font-size:58px}
+.pet .chip{background:#fff3;color:inherit}
+.tags{display:flex;gap:8px;justify-content:center;margin-top:10px;flex-wrap:wrap}
+.tl{list-style:none;margin:0;padding:0}
+.tl li{display:flex;gap:12px;padding:12px 0}
+.tl li+li{border-top:1px solid var(--line)}
+.tl .ic{width:40px;height:40px;border-radius:14px;background:var(--soft);display:grid;place-items:center;flex:none}
+.bar{height:12px;border-radius:9px;background:var(--soft);overflow:hidden;margin-top:12px}
+.bar i{display:block;height:100%;width:24%;background:var(--a);border-radius:9px}
+/* chat */
+.chat{display:flex;flex-direction:column;gap:10px;padding:14px 0 4px}
+.msg{max-width:84%;padding:11px 15px;border-radius:22px;white-space:pre-wrap}
+.msg.bot{background:var(--card);border-bottom-left-radius:6px;align-self:flex-start}
+.msg.me{background:var(--a);color:var(--ai);border-bottom-right-radius:6px;align-self:flex-end;font-weight:600}
+.send{display:flex;gap:8px;position:sticky;bottom:0;padding-top:10px}
+.send input{flex:1;min-width:0;padding:14px 18px;border-radius:99px;border:0;background:var(--card);color:var(--ink);font:inherit;box-shadow:0 6px 20px -10px #0004}
+.send .add{width:48px;height:48px}
+/* settings */
+.gear{width:40px;height:40px;border-radius:50%;background:var(--card);display:grid;place-items:center}
+.gear svg{width:20px;height:20px}
+.back{font-weight:800;color:var(--muted);margin-bottom:10px}
+.pals{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.palc{background:var(--card);border-radius:24px;padding:10px;text-align:left;border:2px solid transparent;display:flex;flex-direction:column;gap:8px}
+.palc.on{border-color:var(--a)}
+.palc .sw{height:56px;border-radius:16px;position:relative;display:block}
+.palc .sw i{position:absolute;right:10px;bottom:10px;width:22px;height:22px;border-radius:50%;border:3px solid #fff8}
+.palc b{font-size:13.5px;padding:0 4px}
+.srow{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 0;font-weight:700}
+.srow+.srow{border-top:1px solid var(--line)}
+.tog{width:50px;height:30px;border-radius:99px;background:var(--soft);position:relative;flex:none;transition:background .2s}
+.tog:after{content:"";position:absolute;left:3px;top:3px;width:24px;height:24px;border-radius:50%;background:var(--card);box-shadow:0 1px 4px #0003;transition:transform .2s}
+.tog[aria-checked=true]{background:var(--a)}
+.tog[aria-checked=true]:after{transform:translateX(20px)}
+/* tab bar */
+nav{position:absolute;left:14px;right:14px;bottom:12px;display:flex;justify-content:space-between;align-items:center;padding:8px;border-radius:99px;background:color-mix(in srgb,var(--card) 82%,transparent);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);box-shadow:0 10px 30px -10px #0005}
+nav button{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:10.5px;font-weight:800;color:var(--muted);padding:8px 0;border-radius:99px;flex:1;transition:background .2s,color .2s}
+nav button.on{color:var(--ink)}
+nav button.on svg{color:var(--a);filter:drop-shadow(0 0 0 var(--ink))}
+nav button.home{flex:none;width:60px;height:60px;margin-top:-26px;justify-content:center;background:var(--a);color:var(--ai);box-shadow:0 8px 18px -6px var(--a);border:4px solid var(--bg)}
+nav button.home.on{color:var(--ai)}
+nav button.home.on svg{color:var(--ai)}
+nav button.home svg{width:26px;height:26px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+<div class="top"><div class="logo"><i><svg viewBox="0 0 24 24"><use href="#paw"/></svg></i>Лапки</div>
+<button class="gear" data-go="settings" aria-label="Настройки"><svg viewBox="0 0 24 24"><use href="#i-gear"/></svg></button></div>
+<main>
+
+<section class="tab on" id="home">
+  <h1 id="hi">Привет, Анна!</h1><div class="muted">Всё для питомцев в одном месте</div>
+  <div class="hero"><div class="av">🐶</div><div><h3>Барсик</h3><p>Груминг через 14 дней, 15:00</p><button class="pill" data-go="pet">Открыть карточку</button></div></div>
+  <div class="bento">
+    <button class="tile tall" data-go="shop"><span class="ic">🥣</span><span><b>Магазин</b><small>Корма −15% до конца недели</small></span></button>
+    <button class="tile" data-go="map"><span class="ic">📍</span><span><b>Парк Дружба</b><small>Площадка, 800 м</small></span></button>
+    <button class="tile" data-go="pet"><span class="ic">🐾</span><span><b>Корм на неделю</b><small>Пора заказать</small></span></button>
+    <button class="tile wide" data-go="ai"><span class="big">💡</span><span><b>Осенью линька сильнее</b><small>Как ухаживать за шерстью корги — спросите помощника</small></span></button>
+  </div>
+</section>
+
+<section class="tab" id="shop">
+  <h1>Магазин</h1>
+  <div class="chips" id="cats"></div>
+  <div class="prods" id="prods"></div>
+  <div class="cartbar" id="cartbar"><span id="cartn"></span><span id="cartsum"></span></div>
+</section>
+
+<section class="tab" id="map">
+  <h1>Карта</h1>
+  <div class="chips" id="mapf"></div>
+  <div class="map" id="mapbox"><div class="park"></div><div class="river"></div><div class="note">Здесь будет Яндекс Карта</div></div>
+  <h2>Рядом с вами</h2>
+  <div id="places"></div>
+</section>
+
+<section class="tab" id="pet">
+  <h1>Ваш питомец</h1>
+  <div class="seg"><span class="chip on">🐶 Барсик</span><span class="chip">🐱 Мурка</span><button class="chip">+ Добавить</button></div>
+  <div class="pet"><div class="big">🐶</div><h2 style="margin:0">Барсик</h2><div style="opacity:.85">Корги, 3 года, 11 кг</div>
+    <div class="tags"><span class="chip">Привит до марта 2027</span><span class="chip">Есть чип</span></div></div>
+  <h2>Груминг</h2>
+  <div class="card"><ul class="tl">
+    <li><span class="ic">📅</span><div><b>14 октября, 15:00</b><br><span class="muted">«Пушистик»: стрижка и мытьё</span></div></li>
+    <li><span class="ic">✂️</span><div><b>12 августа</b><br><span class="muted">«Пушистик»: гигиеническая стрижка</span></div></li>
+    <li><span class="ic">🛁</span><div><b>28 июня</b><br><span class="muted">«Лапки и Хвост»: мытьё и вычёсывание</span></div></li>
+  </ul><button class="btn" style="width:100%;margin-top:6px">Записаться к грумеру</button></div>
+  <h2>Питание</h2>
+  <div class="card"><b>Royal Canin Mini Adult, 2 кг</b><br><span class="muted">Куплен 3 сентября</span>
+    <div class="bar"><i></i></div><div class="muted" style="font-size:13px;margin-top:8px">Осталось примерно на неделю</div>
+    <button class="btn alt" data-go="shop" style="width:100%;margin-top:12px">Заказать снова</button></div>
+</section>
+
+<section class="tab" id="ai">
+  <h1>ИИ помощник</h1>
+  <div class="muted">Питание, уход, поведение: спрашивайте что угодно</div>
+  <div class="chat" id="chat"><div class="msg bot">Привет! Я помогу с любыми вопросами о питомцах. Например, чем кормить корги или как приучить кота к когтеточке.</div></div>
+  <div class="chips" id="sugg"></div>
+  <form class="send" onsubmit="return false"><input id="inp" placeholder="Напишите вопрос…" autocomplete="off" aria-label="Вопрос помощнику"><button class="add" id="sendb" type="button" aria-label="Отправить"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></form>
+</section>
+
+<section class="tab" id="settings">
+  <button class="back" data-go="home">← Назад</button>
+  <h1>Настройки</h1>
+  <h2>Внешний вид</h2>
+  <div class="pals" id="pals"></div>
+  <h2>Уведомления</h2>
+  <div class="card">
+    <div class="srow"><span>Напоминания о груминге</span><button class="tog" role="switch" aria-checked="true" aria-label="Напоминания о груминге"></button></div>
+    <div class="srow"><span>Когда заканчивается корм</span><button class="tog" role="switch" aria-checked="true" aria-label="Когда заканчивается корм"></button></div>
+    <div class="srow"><span>Акции магазина</span><button class="tog" role="switch" aria-checked="false" aria-label="Акции магазина"></button></div>
+  </div>
+</section>
+
+</main>
+<nav id="nav"></nav>
+</div>
+
+<svg width="0" height="0" style="position:absolute"><defs>
+<g id="i-shop"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><path d="M3 6h18M16 10a4 4 0 0 1-8 0"/></g>
+<g id="i-map"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></g>
+<g id="i-home"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></g>
+<g id="i-ai"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></g>
+<g id="paw"><circle cx="5" cy="11" r="2"/><circle cx="9" cy="6" r="2"/><circle cx="15" cy="6" r="2"/><circle cx="19" cy="11" r="2"/><path d="M12 12c-3 0-6 3-6 6 0 2 2 3 6 3s6-1 6-3c0-3-3-6-6-6z"/></g>
+<g id="i-gear"><path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1"/><circle cx="15" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="17" cy="18" r="2"/></g><g id="plus"><path d="M12 5v14M5 12h14"/></g><g id="check"><path d="m5 12 5 5 9-10"/></g>
+</defs></svg>
+
+<script>
+var TABS=[['shop','i-shop','Магазин'],['map','i-map','Карта'],['home','i-home','Главная'],['ai','i-ai','Помощник'],['pet','paw','Питомец']];
+var PRODS=[['🥣','Корм для собак Premium, 2 кг',1890,'Корма'],['🐟','Корм для кошек с лососем, 1 кг',1290,'Корма'],['🎾','Мячик с пищалкой',350,'Игрушки'],['🐭','Мышка-дразнилка',220,'Игрушки'],['🛏️','Мягкая лежанка',2490,'Аксессуары'],['🦮','Поводок-рулетка 5 м',690,'Аксессуары']];
+var PLACES=[['✂️','Грумерская «Пушистик»','Грумеры','400 м, открыто до 20:00',30,40],['✂️','«Лапки и Хвост»','Грумеры','1,1 км, открыто до 19:00',72,28],['🌳','Площадка «Парк Дружба»','Площадки','800 м, есть зона для малых пород',20,25],['🌳','Сквер у пруда','Площадки','1,6 км, огорожена',60,72],['🏥','Ветклиника «Айболит+»','Ветклиники','600 м, круглосуточно',48,58],['🏥','«ВетДоктор»','Ветклиники','2 км, приём с 9 до 21',85,50]];
+var PALS=[['lav','#6c4dff','Лаванда','#6c4dff','#a78bfa'],['lime','#c8f542','Мята и лайм','#0f5c43','#1f8a63'],['ocean','#2f6bff','Океан','#2f6bff','#58a6ff'],['night','#b6ff5c','Ночь','#5b3df5','#b04dff']];
+var cat='Все',mf='Все',sel=-1,cart={};
+function $(i){return document.getElementById(i)}
+function ico(id){return '<svg viewBox="0 0 24 24"><use href="#'+id+'"/></svg>'}
+function go(t){document.querySelectorAll('.tab').forEach(function(e){e.classList.toggle('on',e.id===t)});
+ document.querySelectorAll('#nav button').forEach(function(b){b.classList.toggle('on',b.dataset.t===t)});document.querySelector('main').scrollTop=0}
+$('nav').innerHTML=TABS.map(function(t){return '<button data-t="'+t[0]+'" class="'+(t[0]==='home'?'home on':'')+'">'+ico(t[1])+(t[0]==='home'?'':t[2])+'</button>'}).join('');
+document.addEventListener('click',function(e){var b=e.target.closest('[data-t],[data-go]');if(b)go(b.dataset.t||b.dataset.go)});
+function pal(p){document.documentElement.dataset.pal=p;try{localStorage.setItem('pal',p)}catch(e){}document.querySelectorAll('#pals [data-p]').forEach(function(b){var on=b.dataset.p===p;b.classList.toggle('on',on);b.setAttribute('aria-pressed',on)})}
+$('pals').innerHTML=PALS.map(function(p){return '<button class="palc" data-p="'+p[0]+'"><span class="sw" style="background:linear-gradient(135deg,'+p[3]+','+p[4]+')"><i style="background:'+p[1]+'"></i></span><b>'+p[2]+'</b></button>'}).join('');
+$('pals').onclick=function(e){var b=e.target.closest('[data-p]');if(b)pal(b.dataset.p)};
+document.querySelectorAll('[role=switch]').forEach(function(s){s.onclick=function(){s.setAttribute('aria-checked',s.getAttribute('aria-checked')!=='true')}});
+var saved=null;try{saved=localStorage.getItem('pal')}catch(e){}
+pal(saved||(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches?'night':'lav'));
+function chips(id,list,cur,fn){$(id).innerHTML=list.map(function(c){return '<button class="chip'+(c===cur?' on':'')+'" data-c="'+c+'">'+c+'</button>'}).join('');
+ $(id).onclick=function(e){var b=e.target.closest('[data-c]');if(b)fn(b.dataset.c)}}
+function shop(){chips('cats',['Все','Корма','Игрушки','Аксессуары'],cat,function(c){cat=c;shop()});
+ $('prods').innerHTML=PRODS.map(function(p,i){return (cat==='Все'||p[3]===cat)?'<div class="prod"><div class="pic">'+p[0]+'</div><b>'+p[1]+'</b><div class="r"><span class="price">'+p[2]+' ₽</span><button class="add'+(cart[i]?' done':'')+'" data-p="'+i+'" aria-label="В корзину">'+ico(cart[i]?'check':'plus')+'</button></div></div>':''}).join('');
+ var n=Object.keys(cart).length,s=0;for(var k in cart)s+=PRODS[k][2];
+ $('cartbar').classList.toggle('on',n>0);$('cartn').textContent='В корзине: '+n;$('cartsum').textContent=s+' ₽'}
+$('prods').onclick=function(e){var b=e.target.closest('[data-p]');if(!b)return;var i=b.dataset.p;if(cart[i])delete cart[i];else cart[i]=1;shop()};
+function map(){chips('mapf',['Все','Грумеры','Площадки','Ветклиники'],mf,function(c){mf=c;sel=-1;map()});
+ var list=PLACES.map(function(p,i){return{p:p,i:i}}).filter(function(x){return mf==='Все'||x.p[2]===mf});
+ $('mapbox').querySelectorAll('.pin').forEach(function(n){n.remove()});
+ list.forEach(function(x){var d=document.createElement('div');d.className='pin'+(x.i===sel?' sel':'');d.style.left=x.p[4]+'%';d.style.top=x.p[5]+'%';d.textContent=x.p[0];$('mapbox').appendChild(d)});
+ $('places').innerHTML=list.map(function(x){return '<button class="place'+(x.i===sel?' sel':'')+'" data-i="'+x.i+'"><span class="ic">'+x.p[0]+'</span><span><b>'+x.p[1]+'</b><br><span class="muted">'+x.p[3]+'</span></span></button>'}).join('')}
+$('places').onclick=function(e){var b=e.target.closest('[data-i]');if(b){sel=+b.dataset.i;map()}};
+var Q=['Чем кормить корги?','Как часто мыть собаку?','Как приучить кота к когтеточке?'];
+var A={'кормить':'Корги легко набирают вес, поэтому подойдёт сбалансированный корм для средних пород. Порцию лучше взвешивать и делить на 2 приёма в день.','мыть':'Обычно раз в 1–2 месяца или по необходимости. Частое мытьё сушит кожу, а между купаниями помогает вычёсывание.','когтеточ':'Поставьте когтеточку рядом с местом сна и проведите по ней лапой кота. Хвалите и угощайте, когда он ей пользуется.'};
+chips('sugg',Q,'',function(q){ask(q)});
+function ask(q){q=q||$('inp').value.trim();if(!q)return;var c=$('chat'),m=document.querySelector('main');c.insertAdjacentHTML('beforeend','<div class="msg me"></div>');c.lastChild.textContent=q;$('inp').value='';
+ var r='Это демо-ответ. В рабочей версии здесь будет настоящий ИИ, который знает вашего питомца и отвечает по существу.';for(var k in A){if(q.toLowerCase().indexOf(k)>-1)r=A[k]}
+ setTimeout(function(){c.insertAdjacentHTML('beforeend','<div class="msg bot"></div>');c.lastChild.textContent=r;m.scrollTop=1e5},450);m.scrollTop=1e5}
+$('sendb').onclick=function(){ask()};$('inp').onkeydown=function(e){if(e.key==='Enter'){e.preventDefault();ask()}};
+shop();map();
+try{var tg=window.Telegram&&Telegram.WebApp;if(tg){tg.ready();tg.expand();var u=tg.initDataUnsafe&&tg.initDataUnsafe.user;if(u&&u.first_name)$('hi').textContent='Привет, '+u.first_name+'!'}}catch(e){}
+</script>
+</body>
+</html>
